@@ -1,0 +1,55 @@
+/* Definición de la paleta en escala de grises */
+:root {
+    --primary-color: #222222;   /* Gris muy oscuro */
+    --secondary-color: #555555; /* Gris oscuro medio */
+    --accent-color: #888888;    /* Gris medio */
+    --light-color: #eeeeee;     /* Gris muy claro */
+    --dark-color: #000000;      /* Negro puro */
+}
+
+body {
+    background-color: var(--light-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilos para la tarjeta de perfil */
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: none;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+h4, h5 {
+    color: var(--primary-color);
+}
+
+/* Estilos para los formularios */
+.form-label {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.form-control {
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: 0 0 5px var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* Estilos para botones */
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-primary:hover {
+    background-color: #666666;
+    border-color: #666666;
+}
