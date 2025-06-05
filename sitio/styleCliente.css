@@ -1,0 +1,76 @@
+/* Definición de la paleta en escala de grises */
+:root {
+    --primary-color: #222222;   /* Gris muy oscuro */
+    --secondary-color: #555555; /* Gris oscuro medio */
+    --accent-color: #888888;    /* Gris medio */
+    --light-color: #eeeeee;     /* Gris muy claro */
+    --dark-color: #000000;      /* Negro puro */
+}
+
+body {
+    background-color: var(--light-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+h5 {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-primary:hover {
+    background-color: #666666;
+    border-color: #666666;
+}
+
+.btn-outline-secondary {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--secondary-color);
+    color: var(--light-color);
+}
+
+.btn-outline-danger {
+    border-color: #444444;
+    color: #444444;
+}
+
+.btn-outline-danger:hover {
+    background-color: #444444;
+    color: var(--light-color);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--light-color);
+}
+
+.badge {
+    padding: 5px 10px;
+    font-weight: 500;
+}
+
+.badge.bg-success {
+    background-color: var(--secondary-color) !important;
+    color: var(--light-color) !important;
+}
+
+.badge.bg-danger {
+    background-color: #444444 !important;
+    color: var(--light-color) !important;
+}

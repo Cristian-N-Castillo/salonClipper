@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salon Clipper - Dashboard</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <!-- Custom CSS -->
+  <style>
+    /* Definición de la paleta en escala de grises */
+    :root {
+      --primary-color: #222222;   /* Gris muy oscuro: usado en el fondo de la sidebar y textos destacados */
+      --secondary-color: #555555; /* Gris oscuro medio: para elementos activos y botones */
+      --accent-color: #888888;    /* Gris medio: para acentos, como indicadores y puntos */
+      --light-color: #eeeeee;     /* Gris muy claro: para fondos y secciones claras */
+      --dark-color: #000000;      /* Negro puro: se puede usar cuando se requiera */
+    }
+    
+    body {
+      background-color: var(--light-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .sidebar {
+      background-color: var(--primary-color);
+      color: var(--light-color);
+      height: 100vh;
+      position: fixed;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link {
+      color: rgba(255, 255, 255, 0.8);
+      border-radius: 5px;
+      margin-bottom: 5px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--light-color);
+    }
+    
+    .sidebar .nav-link.active {
+      background-color: var(--secondary-color);
+      color: var(--light-color);
+    }
+    
+    .sidebar .nav-link i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+      border: none;
+      margin-bottom: 20px;
+      background-color: #fff;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .card-header {
+      background-color: #fff;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+    }
+    
+    .stat-card {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .stat-card .number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .stat-card .label {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    
+    .stat-card .icon {
+      font-size: 2rem;
+      color: var(--secondary-color);
+      margin-bottom: 15px;
+    }
+    
+    .btn-primary {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: #666666;
+      border-color: #666666;
+    }
+    
+    .badge {
+      padding: 5px 10px;
+      font-weight: 500;
+    }
+    
+    .table th {
+      background-color: var(--light-color);
+      border-top: none;
+    }
+    
+    .logo {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .logo img {
+      max-width: 80%;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
+    .user-info {
+      line-height: 1.2;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      color: var(--light-color);
+      margin-bottom: 0;
+    }
+    
+    .user-role {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .navbar-custom {
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 20px;
+      border-radius: 10px;
+    }
+    
+    .appointment-badge {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    
+    .badge-confirmed {
+      background-color: var(--secondary-color);
+    }
+    
+    .badge-pending {
+      background-color: var(--accent-color);
+    }
+    
+    .badge-cancelled {
+      background-color: #444444;
+    }
+    
+    .service-card {
+      border-left: 4px solid var(--secondary-color);
+    }
+    
+    .calendar-card {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .calendar-title {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin: 0;
+    }
+    
+    .calendar-nav button {
+      background: none;
+      border: none;
+      color: var(--secondary-color);
+      font-size: 1.2rem;
+    }
+    
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+    
+    .calendar-day {
+      padding: 10px;
+      text-align: center;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .calendar-day:hover {
+      background-color: var(--light-color);
+    }
+    
+    .calendar-day.today {
+      background-color: var(--secondary-color);
+      color: var(--light-color);
+    }
+    
+    .calendar-day.has-appointments {
+      position: relative;
+    }
+    
+    .calendar-day.has-appointments::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-color);
+    }
+    
+    .calendar-day.other-month {
+      color: #adb5bd;
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        margin-left: -250px;
+      }
+      
+      .sidebar.active {
+        margin-left: 0;
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .navbar-toggler {
+        display: block;
+      }
+    }
+    
+    /* Sobrescribir los badges de Bootstrap para la escala de grises */
+    .badge.bg-success {
+      background-color: var(--secondary-color) !important;
+      color: var(--light-color) !important;
+    }
+    .badge.bg-warning {
+      background-color: var(--accent-color) !important;
+      color: var(--dark-color) !important;
+    }
+    .badge.bg-danger {
+      background-color: #444444 !important;
+      color: var(--light-color) !important;
+    }
+    .badge.bg-secondary {
+      background-color: #777777 !important;
+      color: var(--light-color) !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column flex-shrink-0 p-3" style="width: 250px;">
+      <div class="logo">
+        <h3 class="text-light"><i class="bi bi-scissors"></i> Salon Clipper</h3>
+        <p class="text-muted mb-0" style="font-size: 0.8rem;">Potencia tu imagen</p>
+      </div>
+      
+      <div class="user-profile">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User profile">
+        <div class="user-info">
+          <p class="user-name">Carlos Barber</p>
+          <span class="user-role">Administrador</span>
+        </div>
+      </div>
+      
+      <ul class="nav nav-pills flex-column mb-auto mt-3">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link active">
+            <i class="bi bi-speedometer2"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="pagina2.html" class="nav-link">
+            <i class="bi bi-calendar-check"></i> Citas
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="bi bi-people"></i> Clientes
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="bi bi-scissors"></i> Servicios
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="bi bi-cash-stack"></i> Ventas
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="bi bi-bar-chart"></i> Reportes
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="bi bi-gear"></i> Configuración
+          </a>
+        </li>
+      </ul>
+      
+      <div class="mt-auto">
+        <hr>
+        <div class="d-flex align-items-center">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User profile" width="32" height="32" class="rounded-circle me-2">
+          <div>
+            <small class="text-light">Sesión activa</small><br>
+            <a href="#" class="text-light"><small>Cerrar sesión</small></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <nav class="navbar navbar-expand-lg navbar-custom mb-4">
+        <div class="container-fluid">
+          <button class="navbar-toggler d-lg-none" type="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          
+          <div class="d-flex align-items-center">
+            <h4 class="mb-0">Dashboard</h4>
+            <span class="badge bg-secondary ms-2">Hoy: <span id="current-date"></span></span>
+          </div>
+          
+          <div class="d-flex align-items-center">
+            <div class="input-group ms-3" style="width: 250px;">
+              <input type="text" class="form-control" placeholder="Buscar...">
+              <button class="btn btn-outline-secondary" type="button">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+            
+            <div class="dropdown ms-3">
+              <button class="btn btn-light dropdown-toggle" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-bell"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  3
+                </span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                <li><h6 class="dropdown-header">Notificaciones</h6></li>
+                <li><a class="dropdown-item" href="#">Nueva cita reservada</a></li>
+                <li><a class="dropdown-item" href="#">Pago recibido</a></li>
+                <li><a class="dropdown-item" href="#">Recordatorio: Reunión a las 3pm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      <div class="row">
+        <!-- Stats Cards -->
+        <div class="col-md-3">
+          <div class="card stat-card">
+            <div class="icon">
+              <i class="bi bi-calendar-check"></i>
+            </div>
+            <div class="number">24</div>
+            <div class="label">Citas hoy</div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card stat-card">
+            <div class="icon">
+              <i class="bi bi-currency-dollar"></i>
+            </div>
+            <div class="number">$1,850</div>
+            <div class="label">Ingresos hoy</div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card stat-card">
+            <div class="icon">
+              <i class="bi bi-people"></i>
+            </div>
+            <div class="number">15</div>
+            <div class="label">Nuevos clientes</div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card stat-card">
+            <div class="icon">
+              <i class="bi bi-star"></i>
+            </div>
+            <div class="number">4.8</div>
+            <div class="label">Valoración promedio</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row mt-4">
+        <!-- Próximas citas -->
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Próximas citas</h5>
+              <div>
+                <button class="btn btn-sm btn-primary">Ver todas</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Hora</th>
+                      <th>Cliente</th>
+                      <th>Servicio</th>
+                      <th>Barbero</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>09:00 AM</td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="" width="30" height="30" class="rounded-circle me-2">
+                          Juan Pérez
+                        </div>
+                      </td>
+                      <td>Corte + Barba</td>
+                      <td>Carlos</td>
+                      <td><span class="badge bg-success"><span class="appointment-badge badge-confirmed"></span> Confirmada</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>10:30 AM</td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="" width="30" height="30" class="rounded-circle me-2">
+                          María Gómez
+                        </div>
+                      </td>
+                      <td>Corte mujer</td>
+                      <td>Luisa</td>
+                      <td><span class="badge bg-warning text-dark"><span class="appointment-badge badge-pending"></span> Pendiente</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>11:15 AM</td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="" width="30" height="30" class="rounded-circle me-2">
+                          Roberto Sánchez
+                        </div>
+                      </td>
+                      <td>Corte clásico</td>
+                      <td>Carlos</td>
+                      <td><span class="badge bg-success"><span class="appointment-badge badge-confirmed"></span> Confirmada</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>12:00 PM</td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="" width="30" height="30" class="rounded-circle me-2">
+                          Luis Martínez
+                        </div>
+                      </td>
+                      <td>Corte + Tinte</td>
+                      <td>Pedro</td>
+                      <td><span class="badge bg-danger"><span class="appointment-badge badge-cancelled"></span> Cancelada</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>02:30 PM</td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="https://randomuser.me/api/portraits/men/5.jpg" alt="" width="30" height="30" class="rounded-circle me-2">
+                          Andrés López
+                        </div>
+                      </td>
+                      <td>Barba completa</td>
+                      <td>Pedro</td>
+                      <td><span class="badge bg-success"><span class="appointment-badge badge-confirmed"></span> Confirmada</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Calendario y Servicios populares -->
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">Calendario</h5>
+            </div>
+            <div class="card-body">
+              <div class="calendar-card">
+                <div class="calendar-header">
+                  <h6 class="calendar-title">Junio 2023</h6>
+                  <div class="calendar-nav">
+                    <button><i class="bi bi-chevron-left"></i></button>
+                    <button><i class="bi bi-chevron-right"></i></button>
+                  </div>
+                </div>
+                
+                <div class="calendar-weekdays">
+                  <div>L</div>
+                  <div>M</div>
+                  <div>M</div>
+                  <div>J</div>
+                  <div>V</div>
+                  <div>S</div>
+                  <div>D</div>
+                </div>
+                
+                <div class="calendar-days">
+                  <div class="calendar-day other-month">29</div>
+                  <div class="calendar-day other-month">30</div>
+                  <div class="calendar-day other-month">31</div>
+                  <div class="calendar-day">1</div>
+                  <div class="calendar-day">2</div>
+                  <div class="calendar-day">3</div>
+                  <div class="calendar-day">4</div>
+                  <div class="calendar-day">5</div>
+                  <div class="calendar-day">6</div>
+                  <div class="calendar-day">7</div>
+                  <div class="calendar-day">8</div>
+                  <div class="calendar-day">9</div>
+                  <div class="calendar-day">10</div>
+                  <div class="calendar-day">11</div>
+                  <div class="calendar-day">12</div>
+                  <div class="calendar-day">13</div>
+                  <div class="calendar-day">14</div>
+                  <div class="calendar-day">15</div>
+                  <div class="calendar-day today has-appointments">16</div>
+                  <div class="calendar-day has-appointments">17</div>
+                  <div class="calendar-day">18</div>
+                  <div class="calendar-day">19</div>
+                  <div class="calendar-day">20</div>
+                  <div class="calendar-day">21</div>
+                  <div class="calendar-day">22</div>
+                  <div class="calendar-day">23</div>
+                  <div class="calendar-day">24</div>
+                  <div class="calendar-day">25</div>
+                  <div class="calendar-day">26</div>
+                  <div class="calendar-day">27</div>
+                  <div class="calendar-day">28</div>
+                  <div class="calendar-day">29</div>
+                  <div class="calendar-day">30</div>
+                  <div class="calendar-day other-month">1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Servicios populares</h5>
+            </div>
+            <div class="card-body">
+              <div class="list-group">
+                <div class="list-group-item border-0 d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">Corte clásico</h6>
+                    <small class="text-muted">45 min - $25</small>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">42</span>
+                </div>
+                <div class="list-group-item border-0 d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">Corte + Barba</h6>
+                    <small class="text-muted">1h 15min - $40</small>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">35</span>
+                </div>
+                <div class="list-group-item border-0 d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">Afeitado tradicional</h6>
+                    <small class="text-muted">30 min - $20</small>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">28</span>
+                </div>
+                <div class="list-group-item border-0 d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">Tinte de cabello</h6>
+                    <small class="text-muted">1h 30min - $50</small>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">18</span>
+                </div>
+                <div class="list-group-item border-0 d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">Tratamiento capilar</h6>
+                    <small class="text-muted">45 min - $35</small>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">12</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row mt-4">
+        <!-- Barberos disponibles -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Barberos disponibles</h5>
+              <div>
+                <button class="btn btn-sm btn-primary">Ver todos</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex align-items-center">
+                    <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="" width="60" height="60" class="rounded-circle me-3">
+                    <div>
+                      <h6 class="mb-1">Carlos Mendoza</h6>
+                      <small class="text-muted">Especialista en cortes clásicos</small>
+                      <div class="mt-1">
+                        <span class="badge bg-success">Disponible</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex align-items-center">
+                    <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="" width="60" height="60" class="rounded-circle me-3">
+                    <div>
+                      <h6 class="mb-1">Luisa Fernández</h6>
+                      <small class="text-muted">Especialista en cortes modernos</small>
+                      <div class="mt-1">
+                        <span class="badge bg-success">Disponible</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex align-items-center">
+                    <img src="https://randomuser.me/api/portraits/men/13.jpg" alt="" width="60" height="60" class="rounded-circle me-3">
+                    <div>
+                      <h6 class="mb-1">Pedro Rojas</h6>
+                      <small class="text-muted">Especialista en barbas</small>
+                      <div class="mt-1">
+                        <span class="badge bg-success">Disponible</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex align-items-center">
+                    <img src="https://randomuser.me/api/portraits/women/14.jpg" alt="" width="60" height="60" class="rounded-circle me-3">
+                    <div>
+                      <h6 class="mb-1">Ana Torres</h6>
+                      <small class="text-muted">Especialista en tintes</small>
+                      <div class="mt-1">
+                        <span class="badge bg-secondary">No disponible</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Últimos clientes -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Últimos clientes</h5>
+              <div>
+                <button class="btn btn-sm btn-primary">Ver todos</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="list-group">
+                <div class="list-group-item border-0 d-flex align-items-center">
+                  <img src="https://randomuser.me/api/portraits/men/21.jpg" alt="" width="40" height="40" class="rounded-circle me-3">
+                  <div>
+                    <h6 class="mb-1">Miguel Ángel Ramírez</h6>
+                    <small class="text-muted">Última visita: Hoy</small>
+                  </div>
+                </div>
+                <div class="list-group-item border-0 d-flex align-items-center">
+                  <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="" width="40" height="40" class="rounded-circle me-3">
+                  <div>
+                    <h6 class="mb-1">Sofía Hernández</h6>
+                    <small class="text-muted">Última visita: Ayer</small>
+                  </div>
+                </div>
+                <div class="list-group-item border-0 d-flex align-items-center">
+                  <img src="https://randomuser.me/api/portraits/men/23.jpg" alt="" width="40" height="40" class="rounded-circle me-3">
+                  <div>
+                    <h6 class="mb-1">José Luis García</h6>
+                    <small class="text-muted">Última visita: 14 Jun</small>
+                  </div>
+                </div>
+                <div class="list-group-item border-0 d-flex align-items-center">
+                  <img src="https://randomuser.me/api/portraits/women/24.jpg" alt="" width="40" height="40" class="rounded-circle me-3">
+                  <div>
+                    <h6 class="mb-1">Patricia López</h6>
+                    <small class="text-muted">Última visita: 12 Jun</small>
+                  </div>
+                </div>
+                <div class="list-group-item border-0 d-flex align-items-center">
+                  <img src="https://randomuser.me/api/portraits/men/25.jpg" alt="" width="40" height="40" class="rounded-circle me-3">
+                  <div>
+                    <h6 class="mb-1">Fernando Castro</h6>
+                    <small class="text-muted">Última visita: 10 Jun</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bootstrap 5 JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Mostrar fecha actual
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString('es-ES', options);
+    
+    // Toggle sidebar en móviles
+    document.querySelector('.navbar-toggler').addEventListener('click', function() {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
